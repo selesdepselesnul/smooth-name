@@ -4,9 +4,9 @@ import qualified System.Environment as SysEnv
 import qualified System.Info as SysInf
 import qualified Data.List as List
 
-renameWithSeqNum :: Int -> String -> [String] -> [(String, String)]
-renameWithSeqNum _ _ [] = []
-renameWithSeqNum i delimeter xs =
+mapToSeqNum :: Int -> String -> [String] -> [(String, String)]
+mapToSeqNum _ _ [] = []
+mapToSeqNum i delimeter xs =
   map
   (\x -> let src = snd x
          in (src, fst x ++ delimeter ++ src))
@@ -27,7 +27,7 @@ main = do
                       let combineWithCurrDir = combineFilePath currentDir
                       in SysDir.renameFile (combineWithCurrDir $ fst x)
                                            $ combineWithCurrDir $ snd x)
-                   $ renameWithSeqNum 1 "." args
+                   $ mapToSeqNum 1 "." args
   putStrLn "done !"
   
 
