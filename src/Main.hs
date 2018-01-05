@@ -17,7 +17,7 @@ getOsPathDelimeter =
   if List.isInfixOf "mingw" $ SysInf.os then "\\" else "/"
 
 combineFilePath :: String -> String -> String
-combineFilePath currentDir fileName = currentDir ++ getOsPathDelimeter ++ fileName
+combineFilePath  = (++) . (++ getOsPathDelimeter)
 
 main :: IO ()
 main = do
