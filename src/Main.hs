@@ -23,9 +23,10 @@ main :: IO ()
 main = do
   currentDir <- SysDir.getCurrentDirectory
   args <- SysEnv.getArgs
-  sequence_ $ fmap (\x -> SysDir.renameFile
-                              (combineFilePath currentDir (fst x))
-                              (combineFilePath currentDir (snd x)))
+  sequence_ $ fmap (\x ->
+                      let combineWithCurrDir = combineFilePath currentDir
+                      in SysDir.renameFile (combineWithCurrDir $ fst x)
+                                           $ combineWithCurrDir $ snd x)
                    $ renameWithSeqNum 1 "." args
   putStrLn "done !"
   
