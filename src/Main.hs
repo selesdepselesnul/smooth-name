@@ -12,6 +12,14 @@ mapToSeqNum i delimeter xs =
          in (src, fst x ++ delimeter ++ src))
   $ zip (map show [i..length xs]) xs
 
+renameToSeqNum :: String -> [String] -> IO ()
+renameToSeqNum currentDir fileNames =
+  sequence_ $ fmap (\x ->
+                    let combineWithCurrDir = combineFilePath currentDir
+                    in SysDir.renameFile (combineWithCurrDir $ fst x)
+                                           $ combineWithCurrDir $ snd x)
+                   $ mapToSeqNum 1 "." fileNames
+
 getOsPathDelimeter :: String
 getOsPathDelimeter =
   if List.isInfixOf "mingw" $ SysInf.os then "\\" else "/"
@@ -23,11 +31,7 @@ main :: IO ()
 main = do
   currentDir <- SysDir.getCurrentDirectory
   args <- SysEnv.getArgs
-  sequence_ $ fmap (\x ->
-                      let combineWithCurrDir = combineFilePath currentDir
-                      in SysDir.renameFile (combineWithCurrDir $ fst x)
-                                           $ combineWithCurrDir $ snd x)
-                   $ mapToSeqNum 1 "." args
+  renameToSeqNum currentDir args
   putStrLn "done !"
   
 
